@@ -1,0 +1,181 @@
+{
+	"info": {
+		"_postman_id": "e07b6dd4-84cb-4a77-928a-283aad384a32",
+		"name": "Pet_Store",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46854917",
+		"_collection_link": "https://aminulahasun.postman.co/workspace/Aminul-Ahasun's-Workspace~b22a7b62-5691-4b09-812b-af2ae3cb5f77/collection/46854917-e07b6dd4-84cb-4a77-928a-283aad384a32?action=share&source=collection_link&creator=46854917"
+	},
+	"item": [
+		{
+			"name": "Placed_Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var iD = Math.floor(Math.random()*1000) + 1001;\r",
+							"pm.environment.set(\"ID\", iD);\r",
+							"\r",
+							"var petId = Math.floor(Math.random()*200) + 1;\r",
+							"pm.environment.set(\"Pet_ID\", petId);\r",
+							"\r",
+							"var quantity = Math.floor(Math.random()*10) + 1;\r",
+							"pm.environment.set(\"Quantity\", quantity);\r",
+							"\r",
+							"var shipDate = pm.variables.replaceIn(\"{{$isoTimestamp}}\");\r",
+							"pm.environment.set(\"Ship_Date\", shipDate);\r",
+							"\r",
+							"const s = [\"Placed\", \"Processing\", \"Delivered\"];\r",
+							"const status = s[Math.floor(Math.random() * s.length)];\r",
+							"pm.environment.set(\"Status\", status);\r",
+							"\r",
+							"var complete = pm.variables.replaceIn(\"{{$randomBoolean}}\");\r",
+							"pm.environment.set(\"Complete\", complete);\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": {{ID}},\r\n    \"petId\": {{Pet_ID}},\r\n    \"quantity\": {{Quantity}},\r\n    \"shipDate\": \"{{Ship_Date}}\",\r\n    \"status\": \"{{Status}}\",\r\n    \"complete\": {{Complete}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/store/order",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"store",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_Order_Detailes_with_ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var status_code = pm.response.code\r",
+							"\r",
+							"console.log(status_code);\r",
+							"\r",
+							"if(status_code == 200){\r",
+							"    var responseData = pm.response.json()\r",
+							"    console.log(responseData);\r",
+							"\r",
+							"    pm.test(\"Varify Order ID.\", function(){\r",
+							"        pm.expect(pm.environment.get(\"ID\")).to.eql(responseData.id)\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Varify Pet ID.\", function(){\r",
+							"        pm.expect(pm.environment.get(\"Pet_ID\")).to.eql(responseData.petId)\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Varify Quantity.\", function(){\r",
+							"        pm.expect(pm.environment.get(\"Quantity\")).to.eql(responseData.quantity)\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Varify Ship Date.\", function(){\r",
+							"        pm.expect(pm.environment.get(\"Ship_Date\").replace(\"Z\", \"+0000\")).to.eql(responseData.shipDate)\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Varify delivery Status.\", function(){\r",
+							"        pm.expect(pm.environment.get(\"Status\")).to.eql(responseData.status)\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Varify Complete status.\", function(){\r",
+							"        pm.expect(pm.environment.get(\"Complete\")).to.eql(responseData.complete.toString())\r",
+							"    })\r",
+							"}\r",
+							"else if(status_code == 404){\r",
+							"    pm.test(\"ID expired\")\r",
+							"}\r",
+							"else{\r",
+							"    pm.test(\"Something went wrong.\")\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/store/order/{{ID}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"store",
+						"order",
+						"{{ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete_Order_Details_with_ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/store/order/{{ID}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"store",
+						"order",
+						"{{ID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
