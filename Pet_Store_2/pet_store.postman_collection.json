@@ -1,0 +1,319 @@
+{
+	"info": {
+		"_postman_id": "21139741-24c5-4a70-ba02-b6b8afaa6b77",
+		"name": "pet_store",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46854917",
+		"_collection_link": "https://aminulahasun.postman.co/workspace/Aminul-Ahasun's-Workspace~b22a7b62-5691-4b09-812b-af2ae3cb5f77/collection/46854917-21139741-24c5-4a70-ba02-b6b8afaa6b77?action=share&source=collection_link&creator=46854917"
+	},
+	"item": [
+		{
+			"name": "Get_pet_information",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const s = [\"available\", \"pending\", \"sold\"];\r",
+							"const status = s[Math.floor(Math.random() * s.length)];\r",
+							"pm.environment.set(\"Status\", status);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/pet/findByStatus?status={{Status}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"pet",
+						"findByStatus"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "{{Status}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add_pet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var iD = Math.floor(Math.random()*1000) + 1001;\r",
+							"pm.environment.set(\"ID\", iD);\r",
+							"//\r",
+							"var petId = Math.floor(Math.random()*200) + 1;\r",
+							"pm.environment.set(\"Pet_ID\", petId);\r",
+							"\r",
+							"const n = [\"Dog\", \"Cat\", \"Bird\"];\r",
+							"const ca_name = n[Math.floor(Math.random() * n.length)];\r",
+							"pm.environment.set(\"Catagory_name\", ca_name);\r",
+							"//\r",
+							"const N = [\"Buddy\", \"Max\", \"Bella\", \"Tom\", \"Oliver\", \"Lily\", \"Simba\", \"Leo\", \"Sunny\", \"Coco\", \"Rio\", \"Blue\"];\r",
+							"const name = N[Math.floor(Math.random() * N.length)];\r",
+							"pm.environment.set(\"Pet_name\", name);\r",
+							"\r",
+							"//\r",
+							"var photoUrl = pm.variables.replaceIn(\"{{$randomAnimalsImage}}\");\r",
+							"pm.environment.set(\"Photo_Url\", photoUrl);\r",
+							"\r",
+							"//\r",
+							"var tagId = Math.floor(Math.random()*100) + 1;\r",
+							"pm.environment.set(\"Tag_ID\", tagId);\r",
+							"\r",
+							"var tagName = pm.variables.replaceIn(\"{{$randomProduct}}\");\r",
+							"pm.environment.set(\"Tag_Name\", tagName);\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "basic",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"id\":{{ID}},\r\n  \"category\": {\r\n    \"id\":{{Pet_ID}},\r\n    \"name\": \"{{Catagory_name}}\"\r\n  },\r\n  \"name\": \"{{Pet_name}}\",\r\n  \"photoUrls\": [\r\n    \"{{Photo_Url}}\"\r\n  ],\r\n  \"tags\": [\r\n    {\r\n      \"id\":{{Tag_ID}},\r\n      \"name\": \"{{Tag_Name}}\"\r\n    }\r\n  ],\r\n  \"status\": \"{{Status}}\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/pet",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_with_ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var status_code = pm.response.code\r",
+							"\r",
+							"console.log(status_code);\r",
+							"\r",
+							"if(status_code == 200){\r",
+							"    var responseData = pm.response.json()\r",
+							"\r",
+							"    pm.test(\"Varify Order ID.\", function(){\r",
+							"        pm.expect(pm.environment.get(\"ID\")).to.eql(responseData.id)\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Varify Pet ID.\", function(){\r",
+							"        pm.expect(pm.environment.get(\"Pet_ID\")).to.eql(responseData.category.id)\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Varify Catagory name.\", function(){\r",
+							"    pm.expect(pm.environment.get(\"Catagory_name\")).to.eql(responseData.category.name)\r",
+							"    })\r",
+							"//\r",
+							"    pm.test(\"Varify Pet Name.\", function(){\r",
+							"        pm.expect(pm.environment.get(\"Pet_name\")).to.eql(responseData.name)\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Varify Catagory name.\", function(){\r",
+							"    pm.expect(pm.environment.get(\"Photo_Url\")).to.eql(responseData.photoUrls[0])\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Varify Pet Tag ID.\", function(){\r",
+							"        pm.expect(pm.environment.get(\"Tag_ID\")).to.eql(responseData.tags[0].id)\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Varify Pet Tag name.\", function(){\r",
+							"    pm.expect(pm.environment.get(\"Tag_Name\")).to.eql(responseData.tags[0].name)\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Varify Status.\", function(){\r",
+							"    pm.expect(pm.environment.get(\"Status\")).to.eql(responseData.status)\r",
+							"    })\r",
+							"}\r",
+							"else if(status_code == 404){\r",
+							"    pm.test(\"ID expired\")\r",
+							"}\r",
+							"else{\r",
+							"    pm.test(\"Something went wrong.\")\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/pet/{{ID}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"pet",
+						"{{ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update_pet",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var iD = Math.floor(Math.random()*1000) + 1001;\r",
+							"pm.environment.set(\"ID\", iD);\r",
+							"//\r",
+							"var petId = Math.floor(Math.random()*200) + 1;\r",
+							"pm.environment.set(\"Pet_ID\", petId);\r",
+							"\r",
+							"const n = [\"Dog\", \"Cat\", \"Bird\"];\r",
+							"const ca_name = n[Math.floor(Math.random() * n.length)];\r",
+							"pm.environment.set(\"Catagory_name\", ca_name);\r",
+							"//\r",
+							"const N = [\"Buddy\", \"Max\", \"Bella\", \"Tom\", \"Oliver\", \"Lily\", \"Simba\", \"Leo\", \"Sunny\", \"Coco\", \"Rio\", \"Blue\"];\r",
+							"const name = N[Math.floor(Math.random() * N.length)];\r",
+							"pm.environment.set(\"Pet_name\", name);\r",
+							"\r",
+							"//\r",
+							"var photoUrl = pm.variables.replaceIn(\"{{$randomAnimalsImage}}\");\r",
+							"pm.environment.set(\"Photo_Url\", photoUrl);\r",
+							"\r",
+							"//\r",
+							"var tagId = Math.floor(Math.random()*100) + 1;\r",
+							"pm.environment.set(\"Tag_ID\", tagId);\r",
+							"\r",
+							"var tagName = pm.variables.replaceIn(\"{{$randomProduct}}\");\r",
+							"pm.environment.set(\"Tag_Name\", tagName);\r",
+							"\r",
+							"const s = [\"available\", \"pending\", \"sold\"];\r",
+							"const status = s[Math.floor(Math.random() * s.length)];\r",
+							"pm.environment.set(\"Status\", status);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":{{ID}}, \r\n  \"category\": {\r\n    \"id\":{{Pet_ID}},\r\n    \"name\": \"{{Catagory_name}}\"\r\n  },\r\n  \"name\": \"{{Pet_name}}\",\r\n  \"photoUrls\": [\r\n    \"{{Photo_Url}}\"\r\n  ],\r\n  \"tags\": [\r\n    {\r\n      \"id\":{{Tag_ID}},\r\n      \"name\": \"{{Tag_Name}}\"\r\n    }\r\n  ],\r\n  \"status\": \"{{Status}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/pet/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"pet",
+						""
+					]
+				},
+				"description": "Generated from cURL: curl -X 'PUT' \\\r\n  'https://petstore.swagger.io/v2/pet' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"category\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\"\r\n  },\r\n  \"name\": \"doggie\",\r\n  \"photoUrls\": [\r\n    \"string\"\r\n  ],\r\n  \"tags\": [\r\n    {\r\n      \"id\": 0,\r\n      \"name\": \"string\"\r\n    }\r\n  ],\r\n  \"status\": \"available\"\r\n}'\r\n"
+			},
+			"response": []
+		}
+	]
+}

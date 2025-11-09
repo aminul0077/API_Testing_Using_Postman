@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "40c705de-c5d8-4164-b1d3-a12c733ca60e",
-		"name": "Project_1",
+		"name": "Local_Project",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "46854917",
 		"_collection_link": "https://aminulahasun.postman.co/workspace/Aminul-Ahasun's-Workspace~b22a7b62-5691-4b09-812b-af2ae3cb5f77/collection/46854917-40c705de-c5d8-4164-b1d3-a12c733ca60e?action=share&source=collection_link&creator=46854917"
@@ -195,6 +195,29 @@
 			"response": []
 		},
 		{
+			"name": "GetCategoriesAfterUpdate",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}api/categories",
+					"host": [
+						"{{base_url}}api"
+					],
+					"path": [
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "New Request",
 			"request": {
 				"method": "DELETE",
@@ -207,6 +230,29 @@
 					"path": [
 						"categories",
 						"{{CategoryId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetCategoriesAfterDelete",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}api/categories",
+					"host": [
+						"{{base_url}}api"
+					],
+					"path": [
+						"categories"
 					]
 				}
 			},
